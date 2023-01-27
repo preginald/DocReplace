@@ -17,6 +17,13 @@ export async function createDoc(data: any) {
 }
 export async function getDocs() {
   return await prisma.doc.findMany({
-    include: { author: true },
+    include: {
+      author: true,
+      steps: {
+        include: {
+          tasks: true,
+        },
+      },
+    },
   });
 }
