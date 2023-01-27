@@ -8,9 +8,11 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
-    "nuxt": "^3.0.0"
+    "nuxt": "^3.0.0",
+    "prisma": "^4.9.0"
   },
   "dependencies": {
-    "@nuxtjs/tailwindcss": "^6.3.0"
+    "@nuxtjs/tailwindcss": "^6.3.0",
+    "@prisma/client": "^4.9.0"
   }
 }
