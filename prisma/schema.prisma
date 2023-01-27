@@ -22,4 +22,23 @@ model Doc {
   title  String @unique
   author User   @relation(fields: [userId], references: [id])
   userId String
+  steps  Step[]
+}
+
+model Step {
+  id    String @id @default(uuid())
+  title String
+  order Int
+  doc   Doc    @relation(fields: [docId], references: [id])
+  docId String
+  tasks Task[]
+}
+
+model Task {
+  id     String @id @default(uuid())
+  intro  String
+  input  String
+  output String
+  step   Step   @relation(fields: [stepId], references: [id])
+  stepId String
 }
