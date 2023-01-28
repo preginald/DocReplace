@@ -77,3 +77,26 @@ export async function getUserDocs(username: string) {
   });
   return user ? user.docs : null;
 }
+
+export async function getDocBySlugAndUsername(slug: string, username: string) {
+  const user = await prisma.user.findUnique({
+    where: { username },
+    select: { id: true },
+  });
+
+  if (!user) {
+    throw new Error(`User with username ${username} not found`);
+  }
+
+  const doc = await prisma.doc.findUnique({
+    where: {
+      slug_userId: {
+        slug: slug,
+        userId: user.id,
+      },
+    },
+    include: { author: true, steps: { include: { tasks: true } } },
+  });
+
+  return doc;
+}

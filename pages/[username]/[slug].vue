@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- <h1>{{ doc.title }}</h1>
+    <h1>{{ doc.title }}</h1>
     <p>Author: {{ doc.author.username }}</p>
     <h2>Steps</h2>
     <ul>
@@ -12,11 +12,13 @@
           </li>
         </ul>
       </li>
-    </ul> -->
+    </ul>
   </div>
 </template>
 
 <script setup lang="ts">
-const docId: string | string[] = useRoute().params.id;
-console.log(docId);
+const username: string | string[] = useRoute().params.username;
+const slug: string | string[] = useRoute().params.slug;
+
+const { data: doc } = await useFetch("/api/doc/" + username + "/" + slug);
 </script>
