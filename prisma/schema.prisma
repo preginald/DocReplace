@@ -26,6 +26,7 @@ model Doc {
   steps  Step[]
 
   @@unique([slug, userId])
+  @@index([title, slug])
 }
 
 model Step {
