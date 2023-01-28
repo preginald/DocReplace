@@ -13,6 +13,19 @@
         >Title</label
       >
     </div>
+    <div class="relative z-0 w-full mb-6 group">
+      <input
+        v-model="doc.slug"
+        type="text"
+        id="docSlug"
+        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+      />
+      <label
+        for="docSlug"
+        class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+        >Slug</label
+      >
+    </div>
 
     <div v-for="step in doc.steps" class="card-container mt-3">
       <div class="relative z-0 w-full my-6 group">
@@ -83,6 +96,7 @@
 <script setup lang="ts">
 const doc = ref({
   title: ref("Document title"),
+  slug: ref("document-title"),
   author: ref("7c96e0b5-9dd9-11ed-b676-0242ac110011"),
   steps: ref([
     {
@@ -117,6 +131,7 @@ const addTask = (step) => {
 async function submitForm() {
   const formData = {
     title: doc.value.title,
+    slug: doc.value.slug,
     author: doc.value.author,
     steps: doc.value.steps,
   };

@@ -5,11 +5,13 @@ export async function createDoc(data: any) {
 
   const authorId = "7c96e0b5-9dd9-11ed-b676-0242ac110011";
   const title = data.title;
+  const slug = data.slug;
   const steps = data.steps;
 
   const doc = await prisma.doc.create({
     data: {
       title,
+      slug,
       author: {
         connect: {
           id: authorId,
