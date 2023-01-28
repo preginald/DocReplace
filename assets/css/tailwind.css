@@ -9,3 +9,72 @@ body {
 h1 {
   @apply font-medium leading-tight text-4xl mt-0 mb-2 text-red-800;
 }
+
+@layer components {
+  .btn-txt {
+    @apply hover:text-green-600 cursor-pointer text-green-700 text-xs;
+  }
+
+  .btn {
+    @apply bg-green-900 hover:bg-green-600 cursor-pointer rounded-sm px-2 py-1 mr-2 text-white text-xs;
+  }
+
+  .btn-default-lg {
+    @apply focus:outline-none w-full inline-block text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-lg px-5 py-2.5 mr-2 mb-2 dark:bg-gray-600 dark:hover:bg-green-700 dark:focus:ring-green-800;
+  }
+
+  .btn-red-lg {
+    @apply focus:outline-none w-full inline-block text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-lg px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800;
+  }
+  .btn-green-lg {
+    @apply focus:outline-none w-full inline-block text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-lg px-5 py-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800;
+  }
+
+  .btn-yellow-lg {
+    @apply focus:outline-none w-full inline-block text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-lg px-5 py-2.5 mr-2 mb-2 dark:focus:ring-yellow-900;
+  }
+
+  .btn-default-md {
+    @apply text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800;
+  }
+
+  .card-container {
+    @apply block max-w-prose p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700;
+  }
+
+  .id {
+    @apply text-xs;
+  }
+
+  .xs {
+    @apply text-xs text-gray-900 dark:text-white;
+  }
+
+  .badge-default {
+    @apply bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300;
+  }
+
+  .badge-orange {
+    @apply bg-orange-300 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300;
+  }
+
+  .badge-red {
+    @apply bg-red-300 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300;
+  }
+
+  .badge-green {
+    @apply bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300;
+  }
+
+  .badge-dark {
+    @apply bg-gray-100 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300;
+  }
+
+  .badge-warm {
+    @apply bg-orange-200 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300;
+  }
+
+  .badge-heavy {
+    @apply bg-green-200 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300;
+  }
+}
