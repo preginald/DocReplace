@@ -43,6 +43,7 @@ export async function getDocs() {
   return await prisma.doc.findMany({
     include: {
       author: true,
+      inputs: true,
       steps: {
         include: {
           tasks: true,
@@ -59,6 +60,7 @@ export async function getDocById(id: string) {
     },
     include: {
       author: true,
+      inputs: true,
       steps: {
         include: {
           tasks: true,
@@ -95,7 +97,11 @@ export async function getDocBySlugAndUsername(slug: string, username: string) {
         userId: user.id,
       },
     },
-    include: { author: true, steps: { include: { tasks: true } } },
+    include: {
+      author: true,
+      inputs: true,
+      steps: { include: { tasks: true } },
+    },
   });
 
   return doc;
