@@ -71,7 +71,7 @@ hr {
   }
 
   .input-invalid {
-    @apply text-red-800 text-xs font-medium mr-2 py-0 rounded-t dark:text-red-400;
+    @apply text-red-800 text-xs font-medium mr-2 py-0 dark:text-red-400;
   }
 
   .id {
