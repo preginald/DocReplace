@@ -28,7 +28,12 @@
           >Slug</label
         >
       </div>
-      <div v-for="input in doc.inputs" class="flex card-container">
+      <h3 v-if="doc.inputs">Inputs</h3>
+      <div
+        v-for="input in doc.inputs"
+        id="doc.inputs"
+        class="flex card-container"
+      >
         <div class="relative z-0 w-full my-6 group">
           <input
             v-model="input.label"
