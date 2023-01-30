@@ -70,6 +70,10 @@ hr {
     @apply block max-w-prose p-3 bg-white border border-green-400 rounded-b-lg rounded-tr-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-green-400 dark:hover:bg-gray-700 dark:text-white;
   }
 
+  .input-invalid {
+    @apply text-red-800 text-xs font-medium mr-2 py-0 rounded-t dark:text-red-400;
+  }
+
   .id {
     @apply text-xs;
   }
