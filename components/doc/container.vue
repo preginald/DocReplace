@@ -36,7 +36,7 @@
             }}</pre>
           </div>
         </div>
-        <div class="py-3">
+        <div v-if="task.output" class="py-3">
           <span class="badge-output">Output</span>
           <div class="output-container">
             <pre class="p-3">{{ task.output }}</pre>
@@ -49,17 +49,6 @@
 
 <script setup lang="ts">
 const { doc } = defineProps(["doc"]);
-
-// const replacePlaceholders = (
-//   inputs: { id: string; label: string; name: string; value: string }[],
-//   string: string
-// ) => {
-//   inputs.forEach((input) => {
-//     const placeholder = `<vv>${input.name}</vv>`;
-//     string = string.replace(placeholder, input.value);
-//   });
-//   return string;
-// };
 
 const replacePlaceholders = (inputs: any, string: string) => {
   inputs.forEach((input) => {
