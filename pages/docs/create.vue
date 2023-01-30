@@ -40,7 +40,7 @@
             type="text"
             id="input.label"
             placeholder=""
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+            :class="validInputStyle"
           />
           <label
             for="input.label"
@@ -48,18 +48,23 @@
             >Label</label
           >
         </div>
+
         <div class="relative z-0 w-full my-6 group">
           <input
+            @input="checkDuplicate()"
             v-model="input.name"
             type="text"
             id="input.name"
             placeholder=""
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+            :class="input.class"
           />
           <label
             for="input.name"
             class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >Name</label
+          >
+          <span v-if="input.duplicate" class="input-invalid"
+            >Duplicate name</span
           >
         </div>
         <div class="relative z-0 w-full my-6 group">
@@ -68,7 +73,7 @@
             type="text"
             id="input.value"
             placeholder=""
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+            :class="validInputStyle"
           />
           <label
             for="input.value"
@@ -169,6 +174,11 @@
 let inputId = ref("");
 let inputObject = ref({});
 let inputType = ref("");
+let input = {
+  label: "",
+  name: "",
+  value: "",
+};
 const doc = ref({
   title: ref("Document title"),
   slug: ref("document-title"),
@@ -190,15 +200,18 @@ const doc = ref({
       ]),
     },
   ]),
+  valid: false,
 });
 
-const addInput = () => {
+const addInput = (): void => {
   doc.value.inputs.push({
     label: "",
     name: "",
     value: "",
+    class: validInputStyle,
   });
 };
+
 const addStep = () => {
   const order = doc.value.steps.length + 1;
   const id = generateRandomString();
@@ -276,6 +289,34 @@ async function submitForm() {
     body: formData,
   }).then(async () => {
     // redirect to document read
+  });
+}
+
+const validInputStyle =
+  "block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer";
+
+const invalidInputStyle =
+  "block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-red-300 appearance-none dark:text-white dark:border-red-600 dark:focus:border-red-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer";
+
+function checkDuplicate() {
+  const names = new Set();
+  const duplicates = new Set();
+  doc.value.inputs.forEach((input) => {
+    if (names.has(input.name)) {
+      duplicates.add(input.name);
+    } else {
+      names.add(input.name);
+    }
+  });
+
+  doc.value.inputs.forEach((input) => {
+    if (duplicates.has(input.name)) {
+      input.duplicate = true;
+      input.class = invalidInputStyle;
+    } else {
+      input.duplicate = false;
+      input.class = validInputStyle;
+    }
   });
 }
 </script>
