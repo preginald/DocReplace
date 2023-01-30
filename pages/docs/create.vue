@@ -282,6 +282,7 @@ async function submitForm() {
     slug: doc.value.slug,
     author: doc.value.author,
     steps: doc.value.steps,
+    inputs: doc.value.inputs,
   };
 
   await $fetch("/api/doc/create", {
