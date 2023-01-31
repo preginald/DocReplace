@@ -111,6 +111,22 @@
             >Step {{ step.order }} title</label
           >
           <div v-for="task in step.tasks" class="card-container mt-3">
+            <label
+              for="language"
+              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >Select an option</label
+            >
+            <select
+              v-model="task.language.id"
+              @change="setLanguage(task)"
+              id="language"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            >
+              <option selected>Choose a language</option>
+              <option v-for="language in languages" :value="language.id">
+                {{ language.name }}
+              </option>
+            </select>
             <div class="relative z-0 w-full my-6 group">
               <input
                 @focus="setInputId"
@@ -166,8 +182,8 @@
     </div>
     <DocContainer :doc="doc" />
   </div>
-  <pre>{{ inputObject }}</pre>
-  <!-- <pre>{{ doc }}</pre> -->
+  <pre>{{ languages }}</pre>
+  <pre>{{ doc }}</pre>
 </template>
 
 <script setup lang="ts">
@@ -179,6 +195,8 @@ let input = {
   name: "",
   value: "",
 };
+const { data: languages } = await useFetch("/api/language/");
+
 const doc = ref({
   title: ref("Document title"),
   slug: ref("document-title"),
@@ -193,6 +211,7 @@ const doc = ref({
         {
           id: "t1",
           order: ref(1),
+          language: ref({}),
           intro: ref("First we'll take a backup"),
           input: ref("cp original backup"),
           output: ref("copied"),
@@ -299,6 +318,10 @@ const validInputStyle =
 const invalidInputStyle =
   "block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-red-300 appearance-none dark:text-white dark:border-red-600 dark:focus:border-red-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer";
 
+async function setLanguage(task) {
+  task.language = findRowById(languages.value, task.language.id);
+}
+
 function checkDuplicate() {
   const names = new Set();
   const duplicates = new Set();
@@ -320,4 +343,8 @@ function checkDuplicate() {
     }
   });
 }
+
+const findRowById = (rows: { id: number }[], id: number) => {
+  return rows.find((row) => row.id === id);
+};
 </script>
