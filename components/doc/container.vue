@@ -31,9 +31,8 @@
         <div class="py-3">
           <span class="badge-input">Input</span>
           <div class="input-container">
-            <pre class="p-3">{{
-              replacePlaceholders(doc.inputs, task.input)
-            }}</pre>
+            <pre class="p-3">
+<span v-if="task.language.name">$</span> {{ replacePlaceholders(doc.inputs, task.input) }}</pre>
           </div>
         </div>
         <div v-if="task.output" class="py-3">
