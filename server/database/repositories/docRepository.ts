@@ -1,8 +1,6 @@
 import prisma from "../client";
 
 export async function createDoc(data: any) {
-  console.log(data);
-
   const authorId = "7c96e0b5-9dd9-11ed-b676-0242ac110011";
   const title = data.title;
   const slug = data.slug;
