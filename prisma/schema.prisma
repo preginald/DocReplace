@@ -40,12 +40,14 @@ model Step {
 }
 
 model Task {
-  id     String @id @default(uuid())
-  intro  String
-  input  String
-  output String
-  step   Step   @relation(fields: [stepId], references: [id])
-  stepId String
+  id         String   @id @default(uuid())
+  intro      String
+  language   Language @relation(fields: [languageId], references: [id])
+  input      String
+  output     String
+  step       Step     @relation(fields: [stepId], references: [id])
+  stepId     String
+  languageId String
 }
 
 model Input {
@@ -55,4 +57,10 @@ model Input {
   value String
   doc   Doc    @relation(fields: [docId], references: [id])
   docId String
+}
+
+model Language {
+  id   String @id @default(uuid())
+  name String
+  Task Task[]
 }
