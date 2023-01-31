@@ -1,7 +1,7 @@
 <template>
   <div>
     <NuxtLink v-for="doc in docs" :to="'/preginald/' + doc.slug">
-      <div x class="card-container">
+      <div class="card-container">
         {{ doc.title }}
       </div>
     </NuxtLink>
@@ -10,10 +10,11 @@
 
 <script setup lang="ts">
 const username: string | string[] = useRoute().params.username;
-try {
-  const { data: docs } = await useFetch("/api/doc/" + username);
-} catch (error) {
-  error;
-}
+const { data: docs } = await useFetch("/api/doc/" + username);
+// try {
+//   const data = await useFetch("/api/doc/" + username);
+//   console.log(data);
+// } catch (error) {
+//   error;
+// }
 </script>
-k
