@@ -60,7 +60,8 @@ model Input {
 }
 
 model Language {
-  id   String @id @default(uuid())
-  name String
-  Task Task[]
+  id     String  @id @default(uuid())
+  name   String
+  prompt String?
+  Task   Task[]
 }
