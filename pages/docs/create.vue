@@ -86,16 +86,6 @@
         Add an input
       </button>
 
-      <!-- <div>
-        <button
-          @click="getCursorPos(input.name)"
-          v-for="input in doc.inputs"
-          class="badge-default"
-        >
-          {{ input.label }}
-        </button>
-      </div> -->
-
       <div v-for="step in doc.steps" class="card-container mt-3">
         <div class="relative z-0 w-full my-6 group">
           <input
