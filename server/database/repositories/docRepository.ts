@@ -33,9 +33,15 @@ export async function createDoc(data: any) {
             tasks: {
               create: step.tasks.map((task: any) => {
                 return {
+                  order: task.order,
                   intro: task.intro,
                   input: task.input,
                   output: task.output,
+                  language: {
+                    connect: {
+                      id: task.language.id,
+                    },
+                  },
                 };
               }),
             },
