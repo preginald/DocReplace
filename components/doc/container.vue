@@ -29,8 +29,10 @@
           {{ task.intro }}
         </p>
         <div class="py-3">
-          <span class="badge-input">Input</span>
-          <span class="badge-language">{{ task.language.name }}</span>
+          <span class="badge-input">
+            <span>Input</span>
+            <span v-if="task.language.name"> / {{ task.language.name }}</span>
+          </span>
           <div class="input-container">
             <pre class="p-3">
 <span v-if="task.language.name">{{ task.language.prompt }}</span> {{ replacePlaceholders(doc.inputs, task.input) }}</pre>
@@ -60,3 +62,10 @@ const replacePlaceholders = (inputs: any, string: string) => {
   return string;
 };
 </script>
+
+<style>
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+</style>
