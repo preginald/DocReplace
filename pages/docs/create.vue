@@ -86,7 +86,7 @@
         Add an input
       </button>
 
-      <div>
+      <!-- <div>
         <button
           @click="getCursorPos(input.name)"
           v-for="input in doc.inputs"
@@ -94,7 +94,7 @@
         >
           {{ input.label }}
         </button>
-      </div>
+      </div> -->
 
       <div v-for="step in doc.steps" class="card-container mt-3">
         <div class="relative z-0 w-full my-6 group">
@@ -129,11 +129,17 @@
             </select>
             <div class="relative z-0 w-full my-6 group">
               <input
-                @focus="setInputId"
+                @focus="setInputId(task, 'intro', $event)"
                 v-model="task.intro"
                 type="text"
                 :id="'intro-' + task.id"
                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              />
+              <DocButtonsInput
+                v-if="task.focus === 'intro'"
+                :doc="doc"
+                :input="input"
+                :getCursorPos="getCursorPos"
               />
               <label
                 for="task.intro"
@@ -149,6 +155,12 @@
                 :id="'input-' + task.id"
                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               />
+              <DocButtonsInput
+                v-if="task.focus === 'input'"
+                :doc="doc"
+                :input="input"
+                :getCursorPos="getCursorPos"
+              />
               <label
                 for="task.input"
                 class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
@@ -157,11 +169,17 @@
             </div>
             <div class="relative z-0 w-full my-6 group">
               <input
-                @focus="setInputId"
+                @focus="setInputId(task, 'output', $event)"
                 v-model="task.output"
                 type="text"
                 :id="'output-' + task.id"
                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              />
+              <DocButtonsInput
+                v-if="task.focus === 'output'"
+                :doc="doc"
+                :input="input"
+                :getCursorPos="getCursorPos"
               />
               <label
                 for="task.output"
@@ -182,7 +200,7 @@
     </div>
     <DocContainer :doc="doc" />
   </div>
-  <pre>{{ languages }}</pre>
+  <!-- <pre>{{ languages }}</pre> -->
   <pre>{{ doc }}</pre>
 </template>
 
@@ -215,6 +233,7 @@ const doc = ref({
           intro: ref("First we'll take a backup"),
           input: ref("cp original backup"),
           output: ref("copied"),
+          focus: ref(null),
         },
       ]),
     },
@@ -245,17 +264,25 @@ const addStep = () => {
 const addTask = (step) => {
   const order = step.tasks.length + 1;
   const id = generateRandomString();
-  step.tasks.push({ id: id, order: order, intro: "", input: "", output: "" });
+  step.tasks.push({
+    id: id,
+    order: order,
+    intro: "",
+    input: "",
+    output: "",
+    focus: null,
+  });
 };
 
 function setInputId(x, type, e) {
   inputObject.value = x;
+  x.focus = type;
   inputType.value = type;
   // console.log(inputObject);
 
   const target = e.target;
   if (target.tagName === "INPUT") {
-    console.log(`The id of the input field is: ${target.id}`);
+    // console.log(`The id of the input field is: ${target.id}`);
     inputId.value = target.id;
   }
 }
