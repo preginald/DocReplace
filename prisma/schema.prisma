@@ -41,6 +41,7 @@ model Step {
 
 model Task {
   id         String   @id @default(uuid())
+  order      Int
   intro      String
   language   Language @relation(fields: [languageId], references: [id])
   input      String
