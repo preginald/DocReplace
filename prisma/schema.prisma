@@ -11,9 +11,9 @@ datasource db {
 }
 
 model User {
-  id       String  @id @default(uuid())
-  email    String  @unique
-  username String? @unique
+  id       String @id @default(uuid())
+  email    String @unique
+  username String @unique
   docs     Doc[]
 }
 
@@ -40,13 +40,13 @@ model Step {
 }
 
 model Task {
-  id         String   @id @default(uuid())
+  id         String    @id @default(uuid())
   order      Int
   intro      String
-  language   Language @relation(fields: [languageId], references: [id])
+  language   Language? @relation(fields: [languageId], references: [id])
   input      String
-  output     String
-  step       Step     @relation(fields: [stepId], references: [id])
+  output     String?
+  step       Step      @relation(fields: [stepId], references: [id])
   stepId     String
   languageId String
 }
