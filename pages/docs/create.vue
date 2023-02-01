@@ -319,7 +319,11 @@ const invalidInputStyle =
   "block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-red-300 appearance-none dark:text-white dark:border-red-600 dark:focus:border-red-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer";
 
 async function setLanguage(task) {
-  task.language = findRowById(languages.value, task.language.id);
+  const id = task.language.id;
+
+  const language = languages.value.find((language) => language.id === id);
+  task.language.name = language.name;
+  task.language.prompt = language.prompt;
 }
 
 function checkDuplicate() {

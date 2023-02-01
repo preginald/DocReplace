@@ -30,15 +30,18 @@
         </p>
         <div class="py-3">
           <span class="badge-input">Input</span>
+          <span class="badge-language">{{ task.language.name }}</span>
           <div class="input-container">
             <pre class="p-3">
-<span v-if="task.language.name">$</span> {{ replacePlaceholders(doc.inputs, task.input) }}</pre>
+<span v-if="task.language.name">{{ task.language.prompt }}</span> {{ replacePlaceholders(doc.inputs, task.input) }}</pre>
           </div>
         </div>
         <div v-if="task.output" class="py-3">
           <span class="badge-output">Output</span>
           <div class="output-container">
-            <pre class="p-3">{{ task.output }}</pre>
+            <pre
+              class="p-3"
+            ><span v-if="task.language.name">{{ task.language.prompt }}</span> {{ task.output }}</pre>
           </div>
         </div>
       </div>
