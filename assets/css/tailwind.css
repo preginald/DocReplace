@@ -54,6 +54,14 @@ hr {
     @apply text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800;
   }
 
+  .btn-gray-md {
+    @apply text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-600 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800;
+  }
+
+  .btn-green-md {
+    @apply text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800;
+  }
+
   .card-container {
     @apply block max-w-4xl p-6 mt-3 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-white;
   }
@@ -63,11 +71,11 @@ hr {
   }
 
   .input-container {
-    @apply block max-w-prose p-3 bg-white border border-blue-400 rounded-b-lg rounded-tr-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-blue-400 dark:hover:bg-gray-700 dark:text-white;
+    @apply block p-3 bg-white border border-blue-400 rounded-b-lg rounded-tr-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-blue-400 dark:hover:bg-gray-700 dark:text-white;
   }
 
   .output-container {
-    @apply block max-w-prose p-3 bg-white border border-green-400 rounded-b-lg rounded-tr-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-green-400 dark:hover:bg-gray-700 dark:text-white;
+    @apply block p-3 bg-white border border-green-400 rounded-b-lg rounded-tr-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-green-400 dark:hover:bg-gray-700 dark:text-white;
   }
 
   .input-invalid {
