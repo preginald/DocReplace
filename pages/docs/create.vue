@@ -344,10 +344,11 @@ async function setLanguage(task) {
   task.language.prompt = language.prompt;
 }
 
-function checkDuplicate() {
-  const names = new Set();
-  const duplicates = new Set();
-  doc.value.inputs.forEach((input) => {
+const checkDuplicate = () => {
+  const names = new Set<string>();
+  const duplicates = new Set<string>();
+
+  (doc.value.inputs as any[]).forEach((input) => {
     if (names.has(input.name)) {
       duplicates.add(input.name);
     } else {
@@ -355,7 +356,7 @@ function checkDuplicate() {
     }
   });
 
-  doc.value.inputs.forEach((input) => {
+  (doc.value.inputs as any[]).forEach((input) => {
     if (duplicates.has(input.name)) {
       input.duplicate = true;
       input.class = invalidInputStyle;
@@ -364,5 +365,5 @@ function checkDuplicate() {
       input.class = validInputStyle;
     }
   });
-}
+};
 </script>
