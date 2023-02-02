@@ -326,8 +326,9 @@ async function submitForm() {
   await $fetch("/api/doc/create", {
     method: "POST",
     body: formData,
-  }).then(async () => {
-    // redirect to document read
+  }).then(async (doc) => {
+    const user = await $fetch("/api/user/" + doc.userId);
+    useRouter().push({ path: "/" + user.username + "/" + doc.slug });
   });
 }
 
