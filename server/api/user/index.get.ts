@@ -5,10 +5,5 @@ export default defineEventHandler(async (event) => {
 
   const users = await getUsers();
 
-  //   return gyms;
-  // const users = {
-  //   id: "2039i0s9fi09",
-  //   username: "preginald",
-  // };
   return users;
 });
