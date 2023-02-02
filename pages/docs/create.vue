@@ -365,8 +365,4 @@ function checkDuplicate() {
     }
   });
 }
-
-const findRowById = (rows: { id: number }[], id: number) => {
-  return rows.find((row) => row.id === id);
-};
 </script>
