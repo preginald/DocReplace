@@ -36,6 +36,7 @@
       >
         <div class="relative z-0 w-full my-6 group">
           <input
+            @input="fillNameValue(input)"
             v-model="input.label"
             type="text"
             id="input.label"
@@ -336,13 +337,13 @@ const validInputStyle =
 const invalidInputStyle =
   "block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-red-300 appearance-none dark:text-white dark:border-red-600 dark:focus:border-red-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer";
 
-async function setLanguage(task) {
+const setLanguage = async (task: any) => {
   const id = task.language.id;
 
-  const language = languages.value.find((language) => language.id === id);
+  const language = languages.value.find((language: any) => language.id === id);
   task.language.name = language.name;
   task.language.prompt = language.prompt;
-}
+};
 
 const checkDuplicate = () => {
   const names = new Set<string>();
@@ -365,5 +366,14 @@ const checkDuplicate = () => {
       input.class = validInputStyle;
     }
   });
+};
+
+const fillNameValue = (input: {
+  label: string;
+  name?: string;
+  value?: string;
+}) => {
+  input.name = input.label.toLowerCase().split(" ").join("_");
+  input.value = input.label.toLowerCase().split(" ").join("-");
 };
 </script>
