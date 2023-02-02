@@ -257,6 +257,7 @@ const addTask = (step) => {
   step.tasks.push({
     id: id,
     order: order,
+    language: {},
     intro: "",
     input: "",
     output: "",
