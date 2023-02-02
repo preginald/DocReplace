@@ -36,10 +36,10 @@ export async function createDoc(data: any) {
                   order: task.order,
                   intro: task.intro,
                   input: task.input,
-                  output: task.output,
+                  output: task.output ? task.output : null,
                   language: {
                     connect: {
-                      id: task.language.id,
+                      id: task.language.id ? task.language.id : "blank",
                     },
                   },
                 };
