@@ -77,7 +77,7 @@ export async function getDocById(id: string) {
       inputs: true,
       steps: {
         include: {
-          tasks: true,
+          tasks: { include: { language: true } },
         },
       },
     },
@@ -114,7 +114,7 @@ export async function getDocBySlugAndUsername(slug: string, username: string) {
     include: {
       author: true,
       inputs: true,
-      steps: { include: { tasks: true } },
+      steps: { include: { tasks: { include: { language: true } } } },
     },
   });
 
