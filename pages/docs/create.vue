@@ -1,196 +1,213 @@
 <template>
-  <button
-    @click="changeView(view)"
-    v-for="view in viewTypes"
-    :class="viewClass(view)"
-  >
-    {{ view }}
-  </button>
-  <div v-if="doc.view == 'inline'" class="card-container mt-3">
-    <div class="relative z-0 w-full mb-6 group">
-      <input
-        v-model="doc.title"
-        @input="updateSlug"
-        type="text"
-        id="docTitle"
-        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-      />
-      <label
-        for="docTitle"
-        class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-        >Title</label
-      >
-    </div>
-    <div class="relative z-0 w-full mb-6 group">
-      <input
-        v-model="doc.slug"
-        type="text"
-        id="docSlug"
-        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-      />
-      <label
-        for="docSlug"
-        class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-        >Slug</label
-      >
-    </div>
-    <h3 v-if="doc.inputs">Inputs</h3>
-    <div
-      v-for="input in doc.inputs"
-      id="doc.inputs"
-      class="flex card-container"
-    >
-      <div class="relative z-0 w-full my-6 group">
-        <input
-          @input="fillNameValue(input)"
-          v-model="input.label"
-          type="text"
-          id="input.label"
-          placeholder=""
-          :class="validInputStyle"
-        />
-        <label
-          for="input.label"
-          class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >Label</label
+  <div class="doc-container">
+    <div class="flex justify-between">
+      <div>
+        <button
+          @click="changeView(view)"
+          v-for="view in viewTypes"
+          :class="viewClass(view)"
         >
+          {{ view }}
+        </button>
       </div>
-
-      <div class="relative z-0 w-full my-6 group">
-        <input
-          @input="checkDuplicate()"
-          v-model="input.name"
-          type="text"
-          id="input.name"
-          placeholder=""
-          :class="input.class"
-        />
-        <label
-          for="input.name"
-          class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >Name</label
-        >
-        <span v-if="input.duplicate" class="input-invalid">Duplicate name</span>
-      </div>
-      <div class="relative z-0 w-full my-6 group">
-        <input
-          v-model="input.value"
-          type="text"
-          id="input.value"
-          placeholder=""
-          :class="validInputStyle"
-        />
-        <label
-          for="input.value"
-          class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >Default value</label
-        >
-      </div>
-    </div>
-    <button @click="addInput" class="btn-default-lg mt-3">Add an input</button>
-
-    <div v-for="step in doc.steps" class="card-container mt-3">
-      <div class="relative z-0 w-full my-6 group">
-        <input
-          :id="step.id"
-          @focus="setInputId"
-          v-model="step.title"
-          type="text"
-          class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-        />
-        <label
-          for="title"
-          class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >Step {{ step.order }} title</label
-        >
-        <div v-for="task in step.tasks" class="card-container mt-3">
-          <label
-            for="language"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >Select an option</label
-          >
-          <select
-            v-model="task.language.id"
-            @change="setLanguage(task)"
-            id="language"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          >
-            <option selected>Choose a language</option>
-            <option v-for="language in languages" :value="language.id">
-              {{ language.name }}
-            </option>
-          </select>
-          <div class="relative z-0 w-full my-6 group">
-            <input
-              @focus="setInputId(task, 'intro', $event)"
-              v-model="task.intro"
-              type="text"
-              :id="'intro-' + task.id"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            />
-            <DocButtonsInput
-              v-if="task.focus === 'intro'"
-              :doc="doc"
-              :input="input"
-              :getCursorPos="getCursorPos"
-            />
-            <label
-              for="task.intro"
-              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Task intro</label
-            >
-          </div>
-          <div class="relative z-0 w-full my-6 group">
-            <input
-              @focus="setInputId(task, 'input', $event)"
-              v-model="task.input"
-              type="text"
-              :id="'input-' + task.id"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            />
-            <DocButtonsInput
-              v-if="task.focus === 'input'"
-              :doc="doc"
-              :input="input"
-              :getCursorPos="getCursorPos"
-            />
-            <label
-              for="task.input"
-              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Task input</label
-            >
-          </div>
-          <div class="relative z-0 w-full my-6 group">
-            <input
-              @focus="setInputId(task, 'output', $event)"
-              v-model="task.output"
-              type="text"
-              :id="'output-' + task.id"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            />
-            <DocButtonsInput
-              v-if="task.focus === 'output'"
-              :doc="doc"
-              :input="input"
-              :getCursorPos="getCursorPos"
-            />
-            <label
-              for="task.output"
-              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Task output</label
-            >
-          </div>
-          <DocTaskCard :doc="doc" :task="task" />
-        </div>
-        <button @click="addTask(step)" class="btn-default-lg mt-2">
-          Add Task
+      <div>
+        <button @click="submitForm('draft')" class="btn-default-md">
+          Save draft
+        </button>
+        <button @click="submitForm('publish')" class="btn-default-md">
+          Save & Publish
         </button>
       </div>
     </div>
-    <button @click="addStep" class="btn-default-lg mt-3">Add a step</button>
-    <br />
-    <input v-model="doc.author" type="text" id="author" hidden />
-    <button @click="submitForm()" class="btn-default-lg">Save</button>
+    <div v-if="doc.view == 'inline'" class="card-container mt-3">
+      <div class="relative z-0 w-full mb-6 group">
+        <input
+          v-model="doc.title"
+          @input="updateSlug"
+          type="text"
+          id="docTitle"
+          class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+        />
+        <label
+          for="docTitle"
+          class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+          >Title</label
+        >
+      </div>
+      <div class="relative z-0 w-full mb-6 group">
+        <input
+          v-model="doc.slug"
+          type="text"
+          id="docSlug"
+          class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+        />
+        <label
+          for="docSlug"
+          class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+          >Slug</label
+        >
+      </div>
+      <h3 v-if="doc.inputs">Inputs</h3>
+      <div
+        v-for="input in doc.inputs"
+        id="doc.inputs"
+        class="flex card-container"
+      >
+        <div class="relative z-0 w-full my-6 group">
+          <input
+            @input="fillNameValue(input)"
+            v-model="input.label"
+            type="text"
+            id="input.label"
+            placeholder=""
+            :class="validInputStyle"
+          />
+          <label
+            for="input.label"
+            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            >Label</label
+          >
+        </div>
+
+        <div class="relative z-0 w-full my-6 group">
+          <input
+            @input="checkDuplicate()"
+            v-model="input.name"
+            type="text"
+            id="input.name"
+            placeholder=""
+            :class="input.class"
+          />
+          <label
+            for="input.name"
+            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            >Name</label
+          >
+          <span v-if="input.duplicate" class="input-invalid"
+            >Duplicate name</span
+          >
+        </div>
+        <div class="relative z-0 w-full my-6 group">
+          <input
+            v-model="input.value"
+            type="text"
+            id="input.value"
+            placeholder=""
+            :class="validInputStyle"
+          />
+          <label
+            for="input.value"
+            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            >Default value</label
+          >
+        </div>
+      </div>
+      <button @click="addInput" class="btn-default-lg mt-3">
+        Add an input
+      </button>
+
+      <div v-for="step in doc.steps" class="card-container mt-3">
+        <div class="relative z-0 w-full my-6 group">
+          <input
+            :id="step.id"
+            @focus="setInputId"
+            v-model="step.title"
+            type="text"
+            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+          />
+          <label
+            for="title"
+            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            >Step {{ step.order }} title</label
+          >
+          <div v-for="task in step.tasks" class="card-container mt-3">
+            <label
+              for="language"
+              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >Select an option</label
+            >
+            <select
+              v-model="task.language.id"
+              @change="setLanguage(task)"
+              id="language"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            >
+              <option selected>Choose a language</option>
+              <option v-for="language in languages" :value="language.id">
+                {{ language.name }}
+              </option>
+            </select>
+            <div class="relative z-0 w-full my-6 group">
+              <input
+                @focus="setInputId(task, 'intro', $event)"
+                v-model="task.intro"
+                type="text"
+                :id="'intro-' + task.id"
+                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              />
+              <DocButtonsInput
+                v-if="task.focus === 'intro'"
+                :doc="doc"
+                :input="input"
+                :getCursorPos="getCursorPos"
+              />
+              <label
+                for="task.intro"
+                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >Task intro</label
+              >
+            </div>
+            <div class="relative z-0 w-full my-6 group">
+              <input
+                @focus="setInputId(task, 'input', $event)"
+                v-model="task.input"
+                type="text"
+                :id="'input-' + task.id"
+                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              />
+              <DocButtonsInput
+                v-if="task.focus === 'input'"
+                :doc="doc"
+                :input="input"
+                :getCursorPos="getCursorPos"
+              />
+              <label
+                for="task.input"
+                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >Task input</label
+              >
+            </div>
+            <div class="relative z-0 w-full my-6 group">
+              <input
+                @focus="setInputId(task, 'output', $event)"
+                v-model="task.output"
+                type="text"
+                :id="'output-' + task.id"
+                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              />
+              <DocButtonsInput
+                v-if="task.focus === 'output'"
+                :doc="doc"
+                :input="input"
+                :getCursorPos="getCursorPos"
+              />
+              <label
+                for="task.output"
+                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >Task output</label
+              >
+            </div>
+            <DocTaskCard :doc="doc" :task="task" />
+          </div>
+          <button @click="addTask(step)" class="btn-default-lg mt-2">
+            Add Task
+          </button>
+        </div>
+      </div>
+      <button @click="addStep" class="btn-default-lg mt-3">Add a step</button>
+      <br />
+      <input v-model="doc.author" type="text" id="author" hidden />
+    </div>
   </div>
   <DocContainer v-if="doc.view == 'preview'" :doc="doc" />
   <!-- <pre>{{ languages }}</pre> -->
@@ -331,7 +348,7 @@ const updateSlug = () => {
   doc.value.slug = doc.value.title.toLowerCase().split(" ").join("-");
 };
 
-async function submitForm() {
+async function submitForm(status: string) {
   const { data } = useSession();
   const user = await $fetch("/api/user/id/" + data.value.user.name);
   const formData = {
@@ -339,6 +356,7 @@ async function submitForm() {
     title: doc.value.title,
     slug: doc.value.slug,
     author: doc.value.author,
+    status: status,
     steps: doc.value.steps,
     inputs: doc.value.inputs,
   };
