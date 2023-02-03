@@ -7,6 +7,18 @@
             <NuxtLink :to="element.route">{{ element.name }}</NuxtLink>
           </li>
         </ul>
+        <ul v-if="authenticated()" class="flex gap-4">
+          <li>
+            <NuxtLink to="/docs/create">New</NuxtLink>
+          </li>
+
+          <li>
+            <NuxtLink @click="signOut" to="/signout">Sign Out</NuxtLink>
+          </li>
+        </ul>
+        <ul v-else>
+          <li v-if="status == 'unauthenticated'" @click="signIn">Sign In</li>
+        </ul>
       </nav>
     </header>
   </div>
@@ -17,11 +29,22 @@
 </template>
 
 <script setup lang="ts">
-const navElements = [
-  { route: "/", name: "Home" },
-  { route: "/preginald", name: "My Docs" },
-  { route: "/docs/create", name: "New" },
-];
+const {
+  status,
+  data,
+  lastRefreshedAt,
+  getCsrfToken,
+  getProviders,
+  getSession,
+  signIn,
+  signOut,
+} = useSession();
+
+const authenticated = () => {
+  return status.value === "authenticated";
+};
+
+const navElements = [{ route: "/", name: "Home" }];
 </script>
 
 <style scoped>
