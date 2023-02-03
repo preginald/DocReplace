@@ -19,10 +19,11 @@ model User {
 }
 
 model Doc {
-  id     String  @id @default(uuid())
+  id     String     @id @default(uuid())
   title  String
   slug   String
-  author User    @relation(fields: [userId], references: [id])
+  author User       @relation(fields: [userId], references: [id])
+  status PostStatus
   userId String
   steps  Step[]
   inputs Input[]
@@ -66,4 +67,17 @@ model Language {
   name   String
   prompt String?
   Task   Task[]
+}
+
+enum PostStatus {
+  publish
+  future
+  draft
+  pending
+  private
+  trash
+  inherit
+  extend
+  custom
+  archived
 }
