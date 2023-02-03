@@ -6,6 +6,7 @@ export async function createDoc(data: any) {
   const slug = data.slug;
   const steps = data.steps;
   const inputs = data.inputs;
+  const status = data.status;
 
   const doc = await prisma.doc.create({
     data: {
@@ -16,6 +17,7 @@ export async function createDoc(data: any) {
           id: authorId,
         },
       },
+      status,
       inputs: {
         create: inputs.map((input: any) => {
           return {
