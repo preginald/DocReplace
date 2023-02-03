@@ -1,6 +1,11 @@
 <template>
   <div>
-    <h1>{{ doc.title }}</h1>
+    <div class="flex">
+      <h1>{{ doc.title }}</h1>
+      <div v-if="authenticated()" class="ml-5">
+        <button class="btn-default-md">Edit</button>
+      </div>
+    </div>
     <hr />
     <p>This doc has {{ doc.inputs.length }} inputs.</p>
     <div class="flex gap-6 mb-6">
@@ -33,6 +38,12 @@
 
 <script setup lang="ts">
 const { doc } = defineProps(["doc"]);
+
+const { status } = useSession();
+
+const authenticated = () => {
+  return status.value === "authenticated";
+};
 </script>
 
 <style>
