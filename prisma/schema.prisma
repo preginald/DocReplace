@@ -11,9 +11,10 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(uuid())
-  email    String @unique
-  username String @unique
+  id       String  @id @default(uuid())
+  email    String  @unique
+  username String  @unique
+  image    String?
   docs     Doc[]
 }
 
