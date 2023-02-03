@@ -198,6 +198,19 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({ middleware: "auth" });
+
+const {
+  status,
+  data,
+  lastRefreshedAt,
+  getCsrfToken,
+  getProviders,
+  getSession,
+  signIn,
+  signOut,
+} = useSession();
+
 let inputId = ref("");
 let inputObject = ref({});
 let inputType = ref("");
@@ -319,7 +332,10 @@ const updateSlug = () => {
 };
 
 async function submitForm() {
+  const { data } = useSession();
+  const user = await $fetch("/api/user/id/" + data.value.user.name);
   const formData = {
+    userId: user.id,
     title: doc.value.title,
     slug: doc.value.slug,
     author: doc.value.author,
@@ -331,7 +347,6 @@ async function submitForm() {
     method: "POST",
     body: formData,
   }).then(async (doc) => {
-    const user = await $fetch("/api/user/" + doc.userId);
     useRouter().push({ path: "/" + user.username + "/" + doc.slug });
   });
 }
