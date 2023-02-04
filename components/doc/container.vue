@@ -2,9 +2,6 @@
   <div>
     <div class="flex">
       <h1>{{ doc.title }}</h1>
-      <div v-if="authenticated()" class="ml-5">
-        <button class="btn-default-md">Edit</button>
-      </div>
     </div>
     <hr />
     <p>This doc has {{ doc.inputs.length }} inputs.</p>
