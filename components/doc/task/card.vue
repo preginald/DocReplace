@@ -10,7 +10,7 @@
       </span>
       <div class="input-container">
         <pre class="p-3">
-<span v-if="task.language.name">{{ task.language.prompt }}</span> {{ replacePlaceholders(doc.inputs, task.input) }}</pre>
+<span v-if="task.language.name">{{ task.language.prompt }}</span> {{ replacePlaceholders(docStore.doc.inputs, task.input) }}</pre>
       </div>
     </div>
     <div v-if="task.output" class="py-3">
@@ -25,7 +25,9 @@
 </template>
 
 <script setup lang="ts">
-const { doc, task } = defineProps(["doc", "task"]);
+import { useDocStore } from "@/stores/DocStore";
+const docStore = useDocStore();
+const { task } = defineProps(["task"]);
 const replacePlaceholders = (inputs: any, string: string) => {
   inputs.forEach((input) => {
     const regex = new RegExp(`<vv>${input.name}</vv>`, "g");
