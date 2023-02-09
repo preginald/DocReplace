@@ -1,7 +1,8 @@
 <template>
-  <DocToolbar :doc="docStore.doc" />
+  <DocToolbar />
   <DocForm v-if="docStore.view == 'inline'" :doc="docStore.doc" />
   <DocContainer v-if="docStore.view == 'preview'" :doc="docStore.doc" />
+  <DocToolbar />
   <!-- <pre>{{ languages }}</pre> -->
   <!-- <pre>{{ docStore.doc }}</pre> -->
 </template>
