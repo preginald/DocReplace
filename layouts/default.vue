@@ -9,7 +9,7 @@
         </ul>
         <ul v-if="authenticated()" class="flex gap-4">
           <li>
-            <NuxtLink to="/docs/create">New</NuxtLink>
+            <NuxtLink to="/docs/create/">New</NuxtLink>
           </li>
 
           <li>
@@ -29,6 +29,9 @@
 </template>
 
 <script setup lang="ts">
+import { useDocStore } from "@/stores/DocStore";
+const docStore = useDocStore();
+
 const {
   status,
   data,
