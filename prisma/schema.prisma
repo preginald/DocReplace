@@ -36,7 +36,7 @@ model Step {
   id    String @id @default(uuid())
   title String
   order Int
-  doc   Doc    @relation(fields: [docId], references: [id])
+  doc   Doc    @relation(fields: [docId], references: [id], onDelete: Cascade)
   docId String
   tasks Task[]
 }
@@ -48,7 +48,7 @@ model Task {
   language   Language? @relation(fields: [languageId], references: [id])
   input      String
   output     String?
-  step       Step      @relation(fields: [stepId], references: [id])
+  step       Step      @relation(fields: [stepId], references: [id], onDelete: Cascade)
   stepId     String
   languageId String
 }
@@ -58,7 +58,7 @@ model Input {
   label String
   name  String
   value String
-  doc   Doc    @relation(fields: [docId], references: [id])
+  doc   Doc    @relation(fields: [docId], references: [id], onDelete: Cascade)
   docId String
 }
 
