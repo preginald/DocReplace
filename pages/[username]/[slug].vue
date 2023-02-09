@@ -2,6 +2,7 @@
   <DocToolbar />
   <DocForm v-if="isDraft() && isInline()" />
   <DocContainer v-if="isPreview() || isPublished()" />
+  <DocToolbar />
   <!-- <pre>{{ docStore.doc.title }}</pre> -->
 </template>
 
