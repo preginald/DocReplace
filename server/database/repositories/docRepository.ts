@@ -121,7 +121,25 @@ export async function getDocBySlugAndUsername(slug: string, username: string) {
     include: {
       author: true,
       inputs: true,
-      steps: { include: { tasks: { include: { language: true } } } },
+      steps: {
+        orderBy: [
+          {
+            order: "asc",
+          },
+        ],
+        include: {
+          tasks: {
+            orderBy: [
+              {
+                order: "asc",
+              },
+            ],
+            include: {
+              language: true,
+            },
+          },
+        },
+      },
     },
   });
 
