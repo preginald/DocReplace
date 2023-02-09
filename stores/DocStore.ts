@@ -5,28 +5,11 @@ export const useDocStore = defineStore("DocStore", {
   state: () => {
     return {
       doc: ref({
-        title: "Document title new",
-        slug: "document-title",
-        author: "7c96e0b5-9dd9-11ed-b676-0242ac110011",
+        title: "",
+        slug: "",
+        author: "",
         inputs: [],
-        steps: [
-          {
-            id: "laksjdflkasdjf",
-            order: 1,
-            title: "This is the first step",
-            tasks: [
-              {
-                id: "t1",
-                order: 1,
-                language: {},
-                intro: "First we'll take a backup",
-                input: "cp original backup",
-                output: "copied",
-                focus: null,
-              },
-            ],
-          },
-        ],
+        steps: [],
         valid: false,
         status: "new",
       }),
@@ -67,30 +50,12 @@ export const useDocStore = defineStore("DocStore", {
     },
     clearDoc() {
       this.doc = {
-        title: "Document title new",
-        slug: "document-title",
-        author: "7c96e0b5-9dd9-11ed-b676-0242ac110011",
+        title: "",
+        slug: "",
+        author: "",
         inputs: [],
-        steps: [
-          {
-            id: "laksjdflkasdjf",
-            order: 1,
-            title: "This is the first step",
-            tasks: [
-              {
-                id: "t1",
-                order: 1,
-                language: {},
-                intro: "First we'll take a backup",
-                input: "cp original backup",
-                output: "copied",
-                focus: null,
-              },
-            ],
-          },
-        ],
+        steps: [],
         valid: false,
-        view: "inline",
         status: "new",
       };
     },
