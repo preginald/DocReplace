@@ -1,29 +1,34 @@
 <template>
-  <DocToolbar :doc="doc" />
-  <DocForm v-if="isDraft() && isInline()" :doc="doc" />
-  <DocContainer v-if="isPreview()" :doc="doc" />
-  <!-- <pre>{{ doc }}</pre> -->
+  <DocToolbar />
+  <DocForm v-if="isDraft() && isInline()" />
+  <DocContainer v-if="isPreview() || isPublished()" />
+  <!-- <pre>{{ docStore.doc.title }}</pre> -->
 </template>
 
 <script setup lang="ts">
+import { useDocStore } from "@/stores/DocStore";
+const docStore = useDocStore();
+
 const username: string | string[] = useRoute().params.username;
 const slug: string | string[] = useRoute().params.slug;
 
-const { data: doc } = await useFetch(
-  "/api/user/username/" + username + "/doc/" + slug
-);
+await docStore.getUserDocBySlug(username, slug);
 
-doc.value.view = "inline";
+docStore.doc.view = "inline";
+
+const isPublished = () => {
+  return docStore.doc.status == "publish";
+};
 
 const isDraft = () => {
-  return doc.value.status == "draft";
+  return docStore.doc.status == "draft";
 };
 
 const isPreview = () => {
-  return doc.value.view == "preview";
+  return docStore.view == "preview";
 };
 
 const isInline = () => {
-  return doc.value.view == "inline";
+  return docStore.view == "inline";
 };
 </script>
