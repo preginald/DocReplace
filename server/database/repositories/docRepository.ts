@@ -9,6 +9,11 @@ export async function createDoc(data: any) {
   const status = data.status;
 
   const doc = await prisma.doc.create({
+    include: {
+      author: true,
+      inputs: true,
+      steps: { include: { tasks: { include: { language: true } } } },
+    },
     data: {
       title,
       slug,
@@ -120,5 +125,52 @@ export async function getDocBySlugAndUsername(slug: string, username: string) {
     },
   });
 
+  return doc;
+}
+
+export async function updateDoc(id: string, data: any) {
+  await prisma.doc.update({
+    where: { id },
+    data: {
+      slug: id,
+    },
+  });
+  const doc = await createDoc(data);
+  const deletedDoc = await deleteDoc(id);
+  return doc;
+}
+
+export async function editDoc(id: string, data: any) {
+  const docId = data.id;
+  const authorId = data.userId;
+  const title = data.title;
+  const slug = data.slug;
+  const steps = data.steps;
+  const inputs = data.inputs;
+  const status = data.status;
+
+  let doc = await prisma.doc.update({
+    where: {
+      id,
+    },
+    data: {
+      status,
+    },
+    include: {
+      author: true,
+      inputs: true,
+      steps: { include: { tasks: { include: { language: true } } } },
+    },
+  });
+
+  return doc;
+}
+
+export async function deleteDoc(id: string) {
+  const doc = await prisma.doc.delete({
+    where: {
+      id,
+    },
+  });
   return doc;
 }
