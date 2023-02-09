@@ -1,12 +1,12 @@
 <template>
   <div>
     <div class="flex">
-      <h1>{{ doc.title }}</h1>
+      <h1>{{ docStore.doc.title }}</h1>
     </div>
     <hr />
-    <p>This doc has {{ doc.inputs.length }} inputs.</p>
+    <p>This doc has {{ docStore.doc.inputs.length }} inputs.</p>
     <div class="flex gap-6 mb-6">
-      <div v-for="input in doc.inputs">
+      <div v-for="input in docStore.doc.inputs">
         <div class="card-container">
           <label
             :for="input.id"
@@ -23,18 +23,24 @@
         </div>
       </div>
     </div>
-    <div v-for="step in doc.steps">
+    <div v-for="step in docStore.doc.steps">
       <h2>Step {{ step.order }}: {{ step.title }}</h2>
       <hr />
       <div v-for="task in step.tasks">
-        <DocTaskCard :doc="doc" :task="task" />
+        <DocTaskCard :task="task" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const { doc } = defineProps(["doc"]);
+import { useDocStore } from "@/stores/DocStore";
+const docStore = useDocStore();
+
+const username: string | string[] = useRoute().params.username;
+const slug: string | string[] = useRoute().params.slug;
+
+await docStore.getUserDocBySlug(username, slug);
 
 const { status } = useSession();
 

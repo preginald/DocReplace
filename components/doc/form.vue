@@ -2,7 +2,7 @@
   <div class="card-container mt-3">
     <div class="relative z-0 w-full mb-6 group">
       <input
-        v-model="doc.title"
+        v-model="docStore.doc.title"
         @input="updateSlug"
         type="text"
         id="docTitle"
@@ -16,10 +16,11 @@
     </div>
     <div class="relative z-0 w-full mb-6 group">
       <input
-        v-model="doc.slug"
+        v-model="docStore.doc.slug"
         type="text"
         id="docSlug"
         class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+        readonly
       />
       <label
         for="docSlug"
@@ -27,9 +28,9 @@
         >Slug</label
       >
     </div>
-    <h3 v-if="doc.inputs">Inputs</h3>
+    <h3 v-if="docStore.doc.inputs">Inputs</h3>
     <div
-      v-for="input in doc.inputs"
+      v-for="input in docStore.doc.inputs"
       id="doc.inputs"
       class="flex card-container"
     >
@@ -82,7 +83,7 @@
     </div>
     <button @click="addInput" class="btn-default-lg mt-3">Add an input</button>
 
-    <div v-for="step in doc.steps" class="card-container mt-3">
+    <div v-for="step in docStore.doc.steps" class="card-container mt-3">
       <div class="relative z-0 w-full my-6 group">
         <input
           :id="step.id"
@@ -122,7 +123,7 @@
             />
             <DocButtonsInput
               v-if="task.focus === 'intro'"
-              :doc="doc"
+              :doc="docStore.doc"
               :input="input"
               :getCursorPos="getCursorPos"
             />
@@ -142,7 +143,7 @@
             />
             <DocButtonsInput
               v-if="task.focus === 'input'"
-              :doc="doc"
+              :doc="docStore.doc"
               :input="input"
               :getCursorPos="getCursorPos"
             />
@@ -162,7 +163,7 @@
             />
             <DocButtonsInput
               v-if="task.focus === 'output'"
-              :doc="doc"
+              :doc="docStore.doc"
               :input="input"
               :getCursorPos="getCursorPos"
             />
@@ -172,7 +173,7 @@
               >Task output</label
             >
           </div>
-          <DocTaskCard :doc="doc" :task="task" />
+          <DocTaskCard :doc="docStore.doc" :task="task" />
         </div>
         <button @click="addTask(step)" class="btn-default-lg mt-2">
           Add Task
@@ -181,12 +182,15 @@
     </div>
     <button @click="addStep" class="btn-default-lg mt-3">Add a step</button>
     <br />
-    <input v-model="doc.author" type="text" id="author" hidden />
+    <input v-model="docStore.doc.author" type="text" id="author" hidden />
   </div>
 </template>
 
 <script setup lang="ts">
-const { doc } = defineProps(["doc"]);
+import { useDocStore } from "@/stores/DocStore";
+const docStore = useDocStore();
+
+// const { doc } = defineProps(["doc"]);
 const { data: languages } = await useFetch("/api/language/");
 
 let inputId = ref("");
@@ -205,7 +209,7 @@ const invalidInputStyle =
   "block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-red-300 appearance-none dark:text-white dark:border-red-600 dark:focus:border-red-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer";
 
 const updateSlug = () => {
-  doc.slug = doc.title.toLowerCase().split(" ").join("-");
+  docStore.doc.slug = docStore.doc.title.toLowerCase().split(" ").join("-");
 };
 
 const fillNameValue = (input: {
@@ -221,7 +225,7 @@ const checkDuplicate = () => {
   const names = new Set<string>();
   const duplicates = new Set<string>();
 
-  (doc.value.inputs as any[]).forEach((input) => {
+  (docStore.doc.inputs as any[]).forEach((input) => {
     if (names.has(input.name)) {
       duplicates.add(input.name);
     } else {
@@ -229,7 +233,7 @@ const checkDuplicate = () => {
     }
   });
 
-  (doc.value.inputs as any[]).forEach((input) => {
+  (docStore.doc.inputs as any[]).forEach((input) => {
     if (duplicates.has(input.name)) {
       input.duplicate = true;
       input.class = invalidInputStyle;
@@ -241,7 +245,7 @@ const checkDuplicate = () => {
 };
 
 const addInput = (): void => {
-  doc.inputs.push({
+  docStore.doc.inputs.push({
     label: "",
     name: "",
     value: "",
@@ -250,9 +254,9 @@ const addInput = (): void => {
 };
 
 const addStep = () => {
-  const order = doc.steps.length + 1;
+  const order = docStore.doc.steps.length + 1;
   const id = generateRandomString();
-  doc.steps.push({
+  docStore.doc.steps.push({
     id: id,
     order: order,
     title: "",
@@ -325,6 +329,8 @@ function generateRandomString() {
   }
   return result;
 }
+
+checkDuplicate();
 </script>
 
 <style scoped></style>
