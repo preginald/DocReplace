@@ -89,7 +89,11 @@
       </button>
     </div>
 
-    <div v-for="step in docStore.doc.steps" class="card-container mt-3">
+    <div
+      v-for="(step, stepIndex) in docStore.doc.steps"
+      :key="stepIndex"
+      class="card-container mt-3"
+    >
       <div class="relative z-0 w-full my-6 group">
         <input
           :id="step.id"
@@ -102,7 +106,11 @@
           class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
           >Step {{ step.order }} title</label
         >
-        <div v-for="task in step.tasks" class="card-container mt-3">
+        <div
+          v-for="(task, taskIndex) in step.tasks"
+          :key="taskIndex"
+          class="card-container mt-3"
+        >
           <label
             for="language"
             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -178,6 +186,12 @@
               class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
               >Task output</label
             >
+            <button
+              @click="docStore.deleteTask(stepIndex, taskIndex)"
+              class="btn-default-md"
+            >
+              Remove Task {{ task.order }}
+            </button>
           </div>
           <DocTaskCard :doc="docStore.doc" :task="task" />
         </div>
@@ -185,11 +199,15 @@
           Add Task
         </button>
       </div>
+      <button @click="docStore.deleteStep(stepIndex)" class="btn-default-md">
+        Remove Step {{ step.order }}
+      </button>
     </div>
     <button @click="addStep" class="btn-default-lg mt-3">Add a step</button>
     <br />
     <input v-model="docStore.doc.author" type="text" id="author" hidden />
   </div>
+  <pre>{{ docStore.doc }}</pre>
 </template>
 
 <script setup lang="ts">
