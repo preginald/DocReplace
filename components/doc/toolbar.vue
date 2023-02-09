@@ -26,6 +26,9 @@
           <button @click="submitForm('publish')" class="btn-default-md">
             Save & Publish
           </button>
+          <button @click="cancelEdit('publish')" class="btn-default-md">
+            Cancel
+          </button>
         </div>
       </div>
     </div>
@@ -53,6 +56,11 @@ async function deleteDoc() {
 // function updateView(view: string) {
 //   docStore.view = view;
 // }
+
+async function cancelEdit(status: string) {
+  const formData = { status };
+  await docStore.editDoc(formData);
+}
 
 async function submitForm(status: string) {
   const { data } = useSession();
