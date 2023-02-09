@@ -1,5 +1,5 @@
 <template>
-  <div class="card-container mt-3">
+  <div class="doc-container mt-3">
     <div class="relative z-0 w-full mb-6 group">
       <input
         v-model="docStore.doc.title"
@@ -28,60 +28,66 @@
         >Slug</label
       >
     </div>
-    <h3 v-if="docStore.doc.inputs">Inputs</h3>
-    <div
-      v-for="input in docStore.doc.inputs"
-      id="doc.inputs"
-      class="flex card-container"
-    >
-      <div class="relative z-0 w-full my-6 group">
-        <input
-          @input="fillNameValue(input)"
-          v-model="input.label"
-          type="text"
-          id="input.label"
-          placeholder=""
-          :class="validInputStyle"
-        />
-        <label
-          for="input.label"
-          class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >Label</label
-        >
-      </div>
+    <div class="card-container">
+      <h3 v-if="docStore.doc.inputs">Inputs</h3>
+      <div
+        v-for="input in docStore.doc.inputs"
+        id="doc.inputs"
+        class="flex card-container"
+      >
+        <div class="relative z-0 w-full my-6 group">
+          <input
+            @input="fillNameValue(input)"
+            v-model="input.label"
+            type="text"
+            id="input.label"
+            placeholder=""
+            :class="validInputStyle"
+          />
+          <label
+            for="input.label"
+            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            >Label</label
+          >
+        </div>
 
-      <div class="relative z-0 w-full my-6 group">
-        <input
-          @input="checkDuplicate()"
-          v-model="input.name"
-          type="text"
-          id="input.name"
-          placeholder=""
-          :class="input.class"
-        />
-        <label
-          for="input.name"
-          class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >Name</label
-        >
-        <span v-if="input.duplicate" class="input-invalid">Duplicate name</span>
+        <div class="relative z-0 w-full my-6 group">
+          <input
+            @input="checkDuplicate()"
+            v-model="input.name"
+            type="text"
+            id="input.name"
+            placeholder=""
+            :class="input.class"
+          />
+          <label
+            for="input.name"
+            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            >Name</label
+          >
+          <span v-if="input.duplicate" class="input-invalid"
+            >Duplicate name</span
+          >
+        </div>
+        <div class="relative z-0 w-full my-6 group">
+          <input
+            v-model="input.value"
+            type="text"
+            id="input.value"
+            placeholder=""
+            :class="validInputStyle"
+          />
+          <label
+            for="input.value"
+            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            >Default value</label
+          >
+        </div>
       </div>
-      <div class="relative z-0 w-full my-6 group">
-        <input
-          v-model="input.value"
-          type="text"
-          id="input.value"
-          placeholder=""
-          :class="validInputStyle"
-        />
-        <label
-          for="input.value"
-          class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >Default value</label
-        >
-      </div>
+      <button @click="addInput" class="btn-default-lg mt-3">
+        Add an input
+      </button>
     </div>
-    <button @click="addInput" class="btn-default-lg mt-3">Add an input</button>
 
     <div v-for="step in docStore.doc.steps" class="card-container mt-3">
       <div class="relative z-0 w-full my-6 group">
