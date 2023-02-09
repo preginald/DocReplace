@@ -92,116 +92,126 @@
     <div
       v-for="(step, stepIndex) in docStore.doc.steps"
       :key="stepIndex"
-      class="card-container mt-3"
+      class="mt-3"
     >
-      <div class="relative z-0 w-full my-6 group">
-        <input
-          :id="step.id"
-          v-model="step.title"
-          type="text"
-          class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-        />
-        <label
-          for="title"
-          class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >Step {{ step.order }} title</label
-        >
-        <div
-          v-for="(task, taskIndex) in step.tasks"
-          :key="taskIndex"
-          class="card-container mt-3"
-        >
+      <span class="badge-step">
+        <span>Step {{ step.order }}</span>
+      </span>
+      <div class="step-container">
+        <div class="relative z-0 w-full my-6 group">
+          <input
+            :id="step.id"
+            v-model="step.title"
+            type="text"
+            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+          />
           <label
-            for="language"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >Select an option</label
+            for="title"
+            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            >Step {{ step.order }} title</label
           >
-          <select
-            v-model="task.language.id"
-            @change="setLanguage(task)"
-            id="language"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          <div
+            v-for="(task, taskIndex) in step.tasks"
+            :key="taskIndex"
+            class="mt-3"
           >
-            <option selected>Choose a language</option>
-            <option v-for="language in languages" :value="language.id">
-              {{ language.name }}
-            </option>
-          </select>
-          <div class="relative z-0 w-full my-6 group">
-            <input
-              @focus="setInputId(task, 'intro', $event)"
-              v-model="task.intro"
-              type="text"
-              :id="'intro-' + task.id"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            />
-            <DocButtonsInput
-              v-if="task.focus === 'intro'"
-              :doc="docStore.doc"
-              :input="input"
-              :getCursorPos="getCursorPos"
-            />
-            <label
-              for="task.intro"
-              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Task intro</label
-            >
-          </div>
-          <div class="relative z-0 w-full my-6 group">
-            <input
-              @focus="setInputId(task, 'input', $event)"
-              v-model="task.input"
-              type="text"
-              :id="'input-' + task.id"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            />
-            <DocButtonsInput
-              v-if="task.focus === 'input'"
-              :doc="docStore.doc"
-              :input="input"
-              :getCursorPos="getCursorPos"
-            />
-            <label
-              for="task.input"
-              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Task input</label
-            >
-          </div>
-          <div class="relative z-0 w-full my-6 group">
-            <input
-              @focus="setInputId(task, 'output', $event)"
-              v-model="task.output"
-              type="text"
-              :id="'output-' + task.id"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            />
-            <DocButtonsInput
-              v-if="task.focus === 'output'"
-              :doc="docStore.doc"
-              :input="input"
-              :getCursorPos="getCursorPos"
-            />
-            <label
-              for="task.output"
-              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Task output</label
-            >
-            <button
-              @click="docStore.deleteTask(stepIndex, taskIndex)"
-              class="btn-default-md"
-            >
-              Remove Task {{ task.order }}
+            <span class="badge-task">
+              <span>Task {{ task.order }}</span>
+            </span>
+            <div class="task-container">
+              <label
+                for="language"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >Select an option</label
+              >
+              <select
+                v-model="task.language.id"
+                @change="setLanguage(task)"
+                id="language"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              >
+                <option selected>Choose a language</option>
+                <option v-for="language in languages" :value="language.id">
+                  {{ language.name }}
+                </option>
+              </select>
+              <div class="relative z-0 w-full my-6 group">
+                <input
+                  @focus="setInputId(task, 'intro', $event)"
+                  v-model="task.intro"
+                  type="text"
+                  :id="'intro-' + task.id"
+                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                />
+                <DocButtonsInput
+                  v-if="task.focus === 'intro'"
+                  :doc="docStore.doc"
+                  :input="input"
+                  :getCursorPos="getCursorPos"
+                />
+                <label
+                  for="task.intro"
+                  class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  >Task intro</label
+                >
+              </div>
+              <div class="relative z-0 w-full my-6 group">
+                <input
+                  @focus="setInputId(task, 'input', $event)"
+                  v-model="task.input"
+                  type="text"
+                  :id="'input-' + task.id"
+                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                />
+                <DocButtonsInput
+                  v-if="task.focus === 'input'"
+                  :doc="docStore.doc"
+                  :input="input"
+                  :getCursorPos="getCursorPos"
+                />
+                <label
+                  for="task.input"
+                  class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  >Task input</label
+                >
+              </div>
+              <div class="relative z-0 w-full my-6 group">
+                <input
+                  @focus="setInputId(task, 'output', $event)"
+                  v-model="task.output"
+                  type="text"
+                  :id="'output-' + task.id"
+                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                />
+                <DocButtonsInput
+                  v-if="task.focus === 'output'"
+                  :doc="docStore.doc"
+                  :input="input"
+                  :getCursorPos="getCursorPos"
+                />
+                <label
+                  for="task.output"
+                  class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  >Task output</label
+                >
+              </div>
+              <DocTaskCard :doc="docStore.doc" :task="task" />
+              <button
+                @click="docStore.deleteTask(stepIndex, taskIndex)"
+                class="btn-default-md"
+              >
+                Remove Task {{ task.order }}
+              </button>
+            </div>
+            <button @click="addTask(step)" class="btn-default-lg mt-2">
+              Add Task
             </button>
           </div>
-          <DocTaskCard :doc="docStore.doc" :task="task" />
         </div>
-        <button @click="addTask(step)" class="btn-default-lg mt-2">
-          Add Task
+        <button @click="docStore.deleteStep(stepIndex)" class="btn-default-md">
+          Remove Step {{ step.order }}
         </button>
       </div>
-      <button @click="docStore.deleteStep(stepIndex)" class="btn-default-md">
-        Remove Step {{ step.order }}
-      </button>
     </div>
     <button @click="addStep" class="btn-default-lg mt-3">Add a step</button>
     <br />

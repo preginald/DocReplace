@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  @apply bg-gray-100 dark:bg-slate-800;
+  @apply bg-gray-100 dark:bg-slate-900;
 }
 
 h1 {
@@ -92,6 +92,22 @@ hr {
 
   .xs {
     @apply text-xs text-gray-900 dark:text-white;
+  }
+
+  .step-container {
+    @apply block max-w-4xl p-6 bg-white border border-teal-400 rounded-b-lg rounded-tr-lg shadow-md hover:bg-gray-100 dark:bg-gray-900 dark:border-teal-400 dark:hover:bg-gray-900 dark:text-white;
+  }
+
+  .badge-step {
+    @apply bg-blue-100 text-teal-800 text-xs font-medium px-2.5 py-0.5 rounded-t dark:bg-gray-700 dark:text-blue-400 border border-teal-400;
+  }
+
+  .task-container {
+    @apply block max-w-4xl p-6 bg-white border border-purple-400 rounded-b-lg rounded-tr-lg shadow-md hover:bg-gray-100 dark:bg-gray-900 dark:border-purple-400 dark:hover:bg-gray-900 dark:text-white;
+  }
+
+  .badge-task {
+    @apply bg-blue-100 text-teal-800 text-xs font-medium px-2.5 py-0.5 rounded-t dark:bg-gray-700 dark:text-blue-400 border border-purple-400;
   }
 
   .badge-input {
