@@ -1,41 +1,58 @@
 <template>
   <div class="doc-container">
-    <div class="flex justify-between">
-      <div>
-        <button
-          @click="changeView(view)"
-          v-for="view in viewTypes"
-          :class="viewClass(view)"
-        >
-          {{ view }}
+    <div>
+      <div v-if="docStore.doc.status == 'publish'" class="flex justify-end">
+        <button @click="submitForm('draft')" class="btn-default-md">
+          Edit
         </button>
       </div>
-      <div>
-        <button @click="submitForm('draft')" class="btn-default-md">
-          Save draft
-        </button>
-        <button @click="submitForm('publish')" class="btn-default-md">
-          Save & Publish
-        </button>
+      <div v-else class="flex justify-between">
+        <div>
+          <button
+            @click="docStore.changeView(view)"
+            v-for="view in viewTypes"
+            :class="viewClass(view)"
+          >
+            {{ view }}
+          </button>
+        </div>
+        <div>
+          <button @click="deleteDoc()" class="btn-default-md">
+            Delete Doc
+          </button>
+          <button @click="submitForm('draft')" class="btn-default-md">
+            Save draft
+          </button>
+          <button @click="submitForm('publish')" class="btn-default-md">
+            Save & Publish
+          </button>
+        </div>
       </div>
     </div>
   </div>
-  <!-- <div v-else>
-    <button class="btn-default-md">Edit</button>
-  </div> -->
 </template>
 
 <script setup lang="ts">
-const { doc } = defineProps(["doc"]);
+import { useDocStore } from "@/stores/DocStore";
+const docStore = useDocStore();
 
 const viewTypes = ["inline", "preview"];
 const viewClass = (view) => {
-  return view == doc.view ? "btn-green-md" : "btn-gray-md";
+  return view == docStore.view ? "btn-green-md" : "btn-gray-md";
 };
 
-const changeView = (view) => {
-  doc.view = view;
-};
+async function deleteDoc() {
+  const id = docStore.doc.id;
+  await $fetch("/api/doc/" + id, {
+    method: "DELETE",
+  }).then(async (response) => {
+    useRouter().push({ path: "/" + username + "/" + docStore.doc.slug });
+  });
+}
+
+// function updateView(view: string) {
+//   docStore.view = view;
+// }
 
 async function submitForm(status: string) {
   const { data } = useSession();
@@ -44,36 +61,33 @@ async function submitForm(status: string) {
 
   const formData = {
     userId: user.id,
-    title: doc.title,
-    slug: doc.slug,
-    author: doc.author,
+    title: docStore.doc.title,
+    slug: docStore.doc.slug,
+    author: docStore.doc.author,
     status: status,
-    steps: doc.steps,
-    inputs: doc.inputs,
+    steps: docStore.doc.steps,
+    inputs: docStore.doc.inputs,
   };
 
-  if (doc.status == "new") {
-    console.log(`This is a new doc. Create a new doc with ${status} status.`);
+  if (docStore.doc.status == "new") {
     await $fetch("/api/doc/create", {
       method: "POST",
       body: formData,
-    }).then(async (doc) => {
-      useRouter().push({ path: "/" + username + "/" + doc.slug });
+    }).then(async (response) => {
+      docStore.doc = response;
     });
   }
 
-  if (doc.status == "draft") {
-    console.log(
-      `This is an existing doc. Update this doc id ${doc.id} with ${status} status.`
-    );
-    formData.id = doc.id;
+  if (docStore.doc.status == "draft") {
+    await docStore.updateDoc(formData);
+    await docStore.changeView("inline");
+    useRouter().push({ path: "/" + username + "/" + docStore.doc.slug });
+  }
 
-    await $fetch("/api/doc/update/" + doc.id, {
-      method: "PUT",
-      body: formData,
-    }).then(async (doc) => {
-      useRouter().push({ path: "/" + username + "/" + doc.slug });
-    });
+  if (docStore.doc.status == "publish") {
+    await docStore.editDoc(formData);
+    await docStore.changeView("inline");
+    useRouter().push({ path: "/" + username + "/" + docStore.doc.slug });
   }
 }
 </script>
