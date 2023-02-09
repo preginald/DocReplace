@@ -53,10 +53,6 @@ async function deleteDoc() {
   });
 }
 
-// function updateView(view: string) {
-//   docStore.view = view;
-// }
-
 async function cancelEdit(status: string) {
   const formData = { status };
   await docStore.editDoc(formData);
