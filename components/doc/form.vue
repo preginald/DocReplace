@@ -56,7 +56,7 @@
 
           <div class="relative z-0 w-full my-6 group">
             <input
-              @input="checkDuplicate()"
+              @input="docStore.checkDuplicate()"
               v-model="input.name"
               type="text"
               id="input.name"
