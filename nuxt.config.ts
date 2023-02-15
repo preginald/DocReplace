@@ -1,7 +1,13 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  // server config variable
+  runtimeConfig: {
+    MONGO_URI: process.env.MONGO_URI,
+  },
   modules: ["@nuxtjs/tailwindcss", "@sidebase/nuxt-auth", "@pinia/nuxt"],
-
+  nitro: {
+    plugins: ["@/server/db/index.ts"],
+  },
   auth: {
     // The module is enabled. Change this to disable the module
     isEnabled: true,

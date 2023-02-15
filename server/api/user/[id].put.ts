@@ -5,8 +5,8 @@ export default defineEventHandler(async (event) => {
 
   const id = event.context.params.id;
   try {
-    await DocModel.findByIdAndDelete(id);
-    return { message: "Doc removed" };
+    await DocModel.findByIdAndUpdate(id, body);
+    return { message: "Doc updated" };
   } catch (e) {
     throw createError({
       message: e.message,

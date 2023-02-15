@@ -1,13 +1,5 @@
-import prisma from "../client";
+import LanguageModel from "~~/server/models/Language.model";
 
 export async function getLanguages() {
-  return await prisma.language.findMany();
-}
-
-export async function getLanguageById(id: string) {
-  return await prisma.language.findUnique({
-    where: {
-      id,
-    },
-  });
+  return await LanguageModel.find();
 }

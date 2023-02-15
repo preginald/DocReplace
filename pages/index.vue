@@ -1,19 +1,19 @@
 <template>
   <div>
     <h1>Welcome to DocReplace</h1>
-    <!-- <pre>{{ doc }}</pre> -->
   </div>
 </template>
 
 <script setup lang="ts">
-// const { data: doc } = await useFetch("/api/doc");
+import { useUserStore } from "~~/stores/UserStore";
+const userStore = useUserStore();
 
-let user = ref({
-  id: "",
-  email: "",
-  username: "",
-  image: "",
-});
+// let user = ref({
+//   id: "",
+//   email: "",
+//   name: "",
+//   image: "",
+// });
 
 const {
   status,
@@ -26,21 +26,8 @@ const {
   signOut,
 } = useSession();
 
-const processUser = async (data) => {
-  await $fetch("/api/user/upsert/", {
-    method: "POST",
-    body: data,
-  }).then(async (response) => {
-    user.value.id = response.id;
-    user.value.email = response.email;
-    user.value.username = response.username;
-    user.value.image = response.image;
-    useRouter().push({ path: "/" + user.value.username });
-  });
-};
-
 if (status.value == "authenticated") {
-  processUser(data.value);
+  useRouter().push({ path: "/" + userStore.user.name });
 }
 </script>
 

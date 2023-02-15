@@ -37,7 +37,10 @@
 
 <script setup lang="ts">
 import { useDocStore } from "@/stores/DocStore";
+import { useUserStore } from "~~/stores/UserStore";
+
 const docStore = useDocStore();
+const userStore = useUserStore();
 
 const viewTypes = ["inline", "preview"];
 const viewClass = (view) => {
@@ -59,15 +62,10 @@ async function cancelEdit(status: string) {
 }
 
 async function submitForm(status: string) {
-  const { data } = useSession();
-  const username = data.value.user.name;
-  const user = await $fetch("/api/user/id/" + username);
-
   const formData = {
-    userId: user.id,
+    author: userStore.user.id,
     title: docStore.doc.title,
     slug: docStore.doc.slug,
-    author: docStore.doc.author,
     status: status,
     steps: docStore.doc.steps,
     inputs: docStore.doc.inputs,
@@ -85,13 +83,17 @@ async function submitForm(status: string) {
   if (docStore.doc.status == "draft") {
     await docStore.updateDoc(formData);
     await docStore.changeView("inline");
-    useRouter().push({ path: "/" + username + "/" + docStore.doc.slug });
+    useRouter().push({
+      path: "/" + docStore.doc.author.name + "/" + docStore.doc.slug,
+    });
   }
 
   if (docStore.doc.status == "publish") {
     await docStore.editDoc(formData);
     await docStore.changeView("inline");
-    useRouter().push({ path: "/" + username + "/" + docStore.doc.slug });
+    useRouter().push({
+      path: "/" + docStore.doc.author.name + "/" + docStore.doc.slug,
+    });
   }
 }
 </script>

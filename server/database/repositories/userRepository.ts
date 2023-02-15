@@ -1,44 +1,51 @@
-import prisma from "../client";
+import UserModel from "~~/server/models/User.model";
 
-export async function createOrUpdateUser(data) {
-  const username = data.user.name;
-  const email = data.user.email;
-  const image = data.user.image;
-  const update = await prisma.user.upsert({
-    where: {
-      username: username,
-    },
-    create: {
-      email,
-      username,
-      image,
-    },
-    update: {
-      email,
-      username,
-      image,
-    },
-  });
-  return update;
+export async function createUser(data) {
+  const email = data.email;
+  const user = await UserModel.findOne({ email });
+
+  if (user) {
+    return user;
+  }
+
+  try {
+    await UserModel.create(data);
+    return { message: "User created" };
+  } catch (e) {
+    throw createError({
+      message: e.message,
+    });
+  }
 }
 
-export async function getUsers() {
-  const users = await prisma.user.findMany();
-  return users;
+export async function findUserById(id) {
+  try {
+    const user = await UserModel.findOne({ id });
+    if (!user) {
+      throw createError({
+        message: "User not found",
+      });
+    }
+    return user;
+  } catch (e) {
+    throw createError({
+      message: e.message,
+    });
+  }
 }
 
-export async function getUserById(id: string) {
-  return await prisma.user.findUnique({
-    where: {
-      id,
-    },
-  });
-}
-
-export async function getUserIdByName(username: string) {
-  return await prisma.user.findUnique({
-    where: {
-      username,
-    },
-  });
+export async function findUserByEmail(email) {
+  try {
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      throw createError({
+        message: "User not found",
+      });
+    }
+    return user;
+  } catch (e) {
+    throw createError({
+      message: e.message,
+    });
+  }
 }

@@ -29,8 +29,10 @@
 </template>
 
 <script setup lang="ts">
-import { useDocStore } from "@/stores/DocStore";
-const docStore = useDocStore();
+import { useUserStore } from "~~/stores/UserStore";
+const userStore = useUserStore();
+// import { useDocStore } from "@/stores/DocStore";
+// const docStore = useDocStore();
 
 const {
   status,
@@ -46,6 +48,10 @@ const {
 const authenticated = () => {
   return status.value === "authenticated";
 };
+
+if (status.value == "authenticated") {
+  await userStore.createUser(data.value);
+}
 
 const navElements = [{ route: "/", name: "Home" }];
 </script>

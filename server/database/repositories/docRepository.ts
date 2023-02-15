@@ -1,194 +1,73 @@
-import prisma from "../client";
+import DocModel from "~~/server/models/Doc.model";
+import UserModel from "~~/server/models/User.model";
 
 export async function createDoc(data: any) {
-  const authorId = data.userId;
-  const title = data.title;
-  const slug = data.slug;
-  const steps = data.steps;
-  const inputs = data.inputs;
-  const status = data.status;
+  try {
+    await DocModel.create(removeClassIds(data));
 
-  const doc = await prisma.doc.create({
-    include: {
-      author: true,
-      inputs: true,
-      steps: { include: { tasks: { include: { language: true } } } },
-    },
-    data: {
-      title,
-      slug,
-      author: {
-        connect: {
-          id: authorId,
-        },
-      },
-      status,
-      inputs: {
-        create: inputs.map((input: any) => {
-          return {
-            label: input.label,
-            name: input.name,
-            value: input.value,
-          };
-        }),
-      },
-      steps: {
-        create: steps.map((step: any) => {
-          return {
-            title: step.title,
-            order: step.order,
-            tasks: {
-              create: step.tasks.map((task: any) => {
-                return {
-                  order: task.order,
-                  intro: task.intro,
-                  input: task.input,
-                  output: task.output ? task.output : null,
-                  language: {
-                    connect: {
-                      id: task.language.id ? task.language.id : "blank",
-                    },
-                  },
-                };
-              }),
-            },
-          };
-        }),
-      },
-    },
-  });
-  return doc;
+    return { message: "Doc created" };
+  } catch (e) {
+    throw createError({
+      message: e.message,
+    });
+  }
 }
 
-export async function getDocs() {
-  return await prisma.doc.findMany({
-    include: {
-      author: true,
-      inputs: true,
-      steps: {
-        include: {
-          tasks: true,
-        },
-      },
-    },
-  });
+export async function updateDocById(id: string, data: any) {
+  data = removeClassIds(data);
+  const doc = await DocModel.findByIdAndUpdate(id, data, { new: true })
+    .populate("author")
+    .populate({ path: "steps.tasks.language" });
+
+  return doc;
 }
 
 export async function getDocById(id: string) {
-  return await prisma.doc.findUnique({
-    where: {
-      id,
-    },
-    include: {
-      author: true,
-      inputs: true,
-      steps: {
-        include: {
-          tasks: { include: { language: true } },
-        },
-      },
-    },
-  });
+  const doc = await DocModel.findById(id)
+    .populate("author")
+    .populate({ path: "steps.tasks.language" });
+
+  return doc;
 }
 
-export async function getUserDocs(username: string) {
-  const user = await prisma.user.findUnique({
-    where: {
-      username,
-    },
-    include: { docs: true },
-  });
-  return user ? user.docs : null;
-}
-
-export async function getDocBySlugAndUsername(slug: string, username: string) {
-  const user = await prisma.user.findUnique({
-    where: { username },
-    select: { id: true },
-  });
+export async function getDocBySlugAndUsername(slug: string, name: string) {
+  const user = await UserModel.findOne({ name });
 
   if (!user) {
-    throw new Error(`User with username ${username} not found`);
+    throw new Error("User with name ${name} not found");
   }
 
-  const doc = await prisma.doc.findUnique({
-    where: {
-      slug_userId: {
-        slug: slug,
-        userId: user.id,
-      },
-    },
-    include: {
-      author: true,
-      inputs: true,
-      steps: {
-        orderBy: [
-          {
-            order: "asc",
-          },
-        ],
-        include: {
-          tasks: {
-            orderBy: [
-              {
-                order: "asc",
-              },
-            ],
-            include: {
-              language: true,
-            },
-          },
-        },
-      },
-    },
-  });
+  const author = user.id;
+
+  const doc = await DocModel.findOne({ author, slug })
+    .populate("author")
+    .populate({ path: "steps.tasks.language" });
 
   return doc;
 }
 
-export async function updateDoc(id: string, data: any) {
-  await prisma.doc.update({
-    where: { id },
-    data: {
-      slug: id,
-    },
-  });
-  const doc = await createDoc(data);
-  const deletedDoc = await deleteDoc(id);
-  return doc;
-}
-
-export async function editDoc(id: string, data: any) {
-  const docId = data.id;
-  const authorId = data.userId;
-  const title = data.title;
-  const slug = data.slug;
-  const steps = data.steps;
-  const inputs = data.inputs;
-  const status = data.status;
-
-  let doc = await prisma.doc.update({
-    where: {
-      id,
-    },
-    data: {
-      status,
-    },
-    include: {
-      author: true,
-      inputs: true,
-      steps: { include: { tasks: { include: { language: true } } } },
-    },
+export function removeClassIds(data: {
+  title: string;
+  slug: string;
+  author: string;
+  inputs: Input[];
+  steps: Step[];
+  status: string;
+}) {
+  data.inputs = data.inputs.map((input) => {
+    delete input.class;
+    return input;
   });
 
-  return doc;
-}
-
-export async function deleteDoc(id: string) {
-  const doc = await prisma.doc.delete({
-    where: {
-      id,
-    },
+  data.steps = data.steps.map((step) => {
+    delete step.id;
+    step.tasks = step.tasks.map((task) => {
+      delete task.id;
+      task.language = task.language._id;
+      return task;
+    });
+    return step;
   });
-  return doc;
+
+  return data;
 }

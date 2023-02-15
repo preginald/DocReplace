@@ -28,7 +28,6 @@
         >Slug</label
       >
     </div>
-
     <span class="badge-task">Inputs</span>
     <div class="task-container pt-1">
       <div
@@ -46,7 +45,7 @@
               type="text"
               id="input.label"
               placeholder=""
-              :class="validInputStyle"
+              :class="docStore.validInputStyle"
             />
             <label
               for="input.label"
@@ -79,7 +78,7 @@
               type="text"
               id="input.value"
               placeholder=""
-              :class="validInputStyle"
+              :class="docStore.validInputStyle"
             />
             <label
               for="input.value"
@@ -130,13 +129,13 @@
                 >Select an option</label
               >
               <select
-                v-model="task.language.id"
+                v-model="task.language._id"
                 @change="setLanguage(task)"
                 id="language"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
                 <option selected>Choose a language</option>
-                <option v-for="language in languages" :value="language.id">
+                <option v-for="language in languages" :value="language._id">
                   {{ language.name }}
                 </option>
               </select>
@@ -220,7 +219,7 @@
     </div>
     <button @click="addStep" class="btn-default-lg mt-3">Add a step</button>
     <br />
-    <input v-model="docStore.doc.author" type="text" id="author" hidden />
+    <!-- <input v-model="docStore.doc.author" type="text" id="author" hidden /> -->
   </div>
 </template>
 
@@ -240,12 +239,6 @@ let input = {
   value: "",
 };
 
-const validInputStyle =
-  "block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer";
-
-const invalidInputStyle =
-  "block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-red-300 appearance-none dark:text-white dark:border-red-600 dark:focus:border-red-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer";
-
 const updateSlug = () => {
   docStore.doc.slug = docStore.doc.title.toLowerCase().split(" ").join("-");
 };
@@ -257,29 +250,6 @@ const fillNameValue = (input: {
 }) => {
   input.name = input.label.toLowerCase().split(" ").join("_");
   input.value = input.label.toLowerCase().split(" ").join("-");
-};
-
-const checkDuplicate = () => {
-  const names = new Set<string>();
-  const duplicates = new Set<string>();
-
-  (docStore.doc.inputs as any[]).forEach((input) => {
-    if (names.has(input.name)) {
-      duplicates.add(input.name);
-    } else {
-      names.add(input.name);
-    }
-  });
-
-  (docStore.doc.inputs as any[]).forEach((input) => {
-    if (duplicates.has(input.name)) {
-      input.duplicate = true;
-      input.class = invalidInputStyle;
-    } else {
-      input.duplicate = false;
-      input.class = validInputStyle;
-    }
-  });
 };
 
 const addInput = (): void => {
@@ -298,7 +268,17 @@ const addStep = () => {
     id: id,
     order: order,
     title: "",
-    tasks: [],
+    tasks: [
+      {
+        id: id,
+        order: order,
+        language: {},
+        intro: "",
+        input: "",
+        output: "",
+        focus: null,
+      },
+    ],
   });
 };
 
@@ -330,9 +310,9 @@ function setInputId(x, type, e) {
 }
 
 const setLanguage = async (task: any) => {
-  const id = task.language.id;
+  const id = task.language._id;
 
-  const language = languages.value.find((language: any) => language.id === id);
+  const language = languages.value.find((language: any) => language._id === id);
   task.language.name = language.name;
   task.language.prompt = language.prompt;
 };
@@ -368,7 +348,7 @@ function generateRandomString() {
   return result;
 }
 
-checkDuplicate();
+docStore.checkDuplicate();
 </script>
 
 <style scoped></style>

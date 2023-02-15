@@ -1,4 +1,4 @@
-import { getDocBySlugAndUsername } from "~/server/database/repositories/docRepository";
+import { getDocBySlugAndUsername } from "~~/server/database/repositories/docRepository";
 
 export default defineEventHandler(async (event) => {
   const { username, slug } = event.context.params;
