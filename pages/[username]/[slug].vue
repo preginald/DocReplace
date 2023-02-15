@@ -1,8 +1,10 @@
 <template>
   <DocToolbar />
+  <hr />
   <DocForm v-if="isDraft() && isInline()" />
   <DocContainer v-if="isPreview() || isPublished()" />
-  <DocToolbar />
+  <hr />
+  <ocToolbar />
   <!-- <pre>{{ docStore.doc }}</pre> -->
 </template>
 
