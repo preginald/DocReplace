@@ -94,6 +94,8 @@
     </div>
 
     <div
+      @mouseover="hoverStep(step)"
+      @mouseout="hoverStep(step)"
       v-for="(step, stepIndex) in docStore.doc.steps"
       :key="stepIndex"
       class="mt-3"
@@ -115,6 +117,8 @@
             >Step {{ step.order }} title</label
           >
           <div
+            @mouseover="hoverTask(task)"
+            @mouseout="hoverTask(task)"
             v-for="(task, taskIndex) in step.tasks"
             :key="taskIndex"
             class="mt-3"
@@ -200,26 +204,41 @@
                 >
               </div>
               <DocTaskCard :doc="docStore.doc" :task="task" />
-              <button
-                @click="docStore.deleteTask(stepIndex, taskIndex)"
-                class="btn-default-md"
+              <div
+                v-if="task.hover"
+                @mouseover="hoverTask(task)"
+                @mouseout="hoverTask(task)"
+                class="flex justify-between"
               >
-                Remove Task {{ task.order }}
-              </button>
+                <button
+                  @click="docStore.deleteTask(stepIndex, taskIndex)"
+                  class="btn-default-md"
+                >
+                  Remove Task {{ task.order }}
+                </button>
+                <button @click="addTask(step)" class="btn-default-md">
+                  Add Task
+                </button>
+              </div>
             </div>
-            <button @click="addTask(step)" class="btn-default-lg mt-2">
-              Add Task
-            </button>
           </div>
         </div>
-        <button @click="docStore.deleteStep(stepIndex)" class="btn-default-md">
-          Remove Step {{ step.order }}
-        </button>
+        <div
+          v-if="step.hover"
+          @mouseover="hoverStep(step)"
+          @mouseout="hoverStep(step)"
+          class="flex justify-between"
+        >
+          <button
+            @click="docStore.deleteStep(stepIndex)"
+            class="btn-default-md"
+          >
+            Remove Step {{ step.order }}
+          </button>
+          <button @click="addStep" class="btn-default-md">Add a step</button>
+        </div>
       </div>
     </div>
-    <button @click="addStep" class="btn-default-lg mt-3">Add a step</button>
-    <br />
-    <!-- <input v-model="docStore.doc.author" type="text" id="author" hidden /> -->
   </div>
 </template>
 
@@ -346,6 +365,14 @@ function generateRandomString() {
     result += characters[Math.floor(Math.random() * characters.length)];
   }
   return result;
+}
+
+function hoverStep(step: {}) {
+  step.hover = step.hover ? !step.hover : true;
+}
+
+function hoverTask(task: {}) {
+  task.hover = task.hover ? !task.hover : true;
 }
 
 docStore.checkDuplicate();
