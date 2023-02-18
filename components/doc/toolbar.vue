@@ -48,11 +48,12 @@ const viewClass = (view) => {
 };
 
 async function deleteDoc() {
-  const id = docStore.doc.id;
+  const id = docStore.doc._id;
   await $fetch("/api/doc/" + id, {
     method: "DELETE",
-  }).then(async (response) => {
-    useRouter().push({ path: "/" + username + "/" + docStore.doc.slug });
+  });
+  useRouter().push({
+    path: "/" + docStore.doc.author.name,
   });
 }
 
