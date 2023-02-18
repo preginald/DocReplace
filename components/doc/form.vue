@@ -208,7 +208,7 @@
                 v-if="task.hover"
                 @mouseover="hoverTask(task)"
                 @mouseout="hoverTask(task)"
-                class="flex justify-between"
+                class="flex justify-between task-btn-container"
               >
                 <button
                   @click="docStore.deleteTask(stepIndex, taskIndex)"
@@ -259,7 +259,13 @@ let input = {
 };
 
 const updateSlug = () => {
-  docStore.doc.slug = docStore.doc.title.toLowerCase().split(" ").join("-");
+  const slug = docStore.doc.title
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+
+  docStore.doc.slug = slug;
 };
 
 const fillNameValue = (input: {
