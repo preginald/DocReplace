@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="doc-container mt-3">
     <div class="flex">
       <h1>{{ docStore.doc.title }}</h1>
     </div>
