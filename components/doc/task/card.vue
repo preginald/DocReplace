@@ -3,7 +3,7 @@
     <p class="mb-5">
       {{ task.intro }}
     </p>
-    <div class="py-3">
+    <div @click="copy(task)" class="py-3">
       <span class="badge-input">
         <span>Input</span>
         <span v-if="task.language.name"> / {{ task.language.name }}</span>
@@ -34,5 +34,27 @@ const replacePlaceholders = (inputs: any, string: string) => {
     string = string.replace(regex, input.value);
   });
   return string;
+};
+
+const copy = (task) => {
+  const copyText = replacePlaceholders(docStore.doc.inputs, task.input);
+  // Create a new textarea element
+  const textarea = document.createElement("textarea");
+
+  // Set the value of the textarea to the text to copy
+  textarea.value = copyText;
+
+  // Add the textarea to the document
+  document.body.appendChild(textarea);
+
+  // Select the contents of the textarea
+  textarea.select();
+
+  // Copy the contents to the clipboard
+  document.execCommand("copy");
+
+  // Remove the textarea from the document
+  document.body.removeChild(textarea);
+  console.log(copyText);
 };
 </script>
