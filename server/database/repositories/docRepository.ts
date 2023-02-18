@@ -46,6 +46,17 @@ export async function getDocBySlugAndUsername(slug: string, name: string) {
   return doc;
 }
 
+export async function deleteDocById(id: string) {
+  try {
+    await DocModel.findByIdAndDelete(id);
+    return { message: "Doc removed" };
+  } catch (e) {
+    throw createError({
+      message: e.message,
+    });
+  }
+}
+
 export function removeClassIds(data: {
   title: string;
   slug: string;
