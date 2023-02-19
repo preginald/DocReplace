@@ -216,7 +216,10 @@
                 >
                   Remove Task {{ task.order }}
                 </button>
-                <button @click="addTask(step)" class="btn-default-md">
+                <button
+                  @click="docStore.addTask(stepIndex, taskIndex)"
+                  class="btn-default-md"
+                >
                   Add Task
                 </button>
               </div>

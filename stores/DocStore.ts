@@ -103,10 +103,35 @@ export const useDocStore = defineStore("DocStore", {
         }
       });
     },
-    deleteTask(stepIndex: number, taskIndex: number) {
+    addTask(stepIndex: number, taskIndex: number): void {
+      const id = this.generateRandomString();
+      const newTask = {
+        id,
+        order: taskIndex + 1,
+        language: {},
+        intro: "",
+        input: "",
+        output: "",
+        focus: null,
+      };
+
       const step = this.doc.steps[stepIndex];
-      const tasks = step.tasks.filter((task, index) => index !== taskIndex);
-      this.doc.steps[stepIndex].tasks = tasks;
+
+      // insert new task at specified index
+      step.tasks.splice(taskIndex + 1, 0, newTask);
+
+      // update order of subsequent tasks
+      step.tasks
+        .slice(taskIndex + 1)
+        .forEach((task, index) => (task.order = taskIndex + index + 2));
+    },
+    deleteTask(stepIndex: number, taskIndex: number) {
+      this.doc.steps[stepIndex].tasks = this.doc.steps[stepIndex].tasks
+        .filter((task, index) => index !== taskIndex)
+        .map((task, index) => {
+          task.order = index + 1;
+          return task;
+        });
     },
     checkDuplicate() {
       const names = new Set<string>();
