@@ -235,7 +235,9 @@
           >
             Remove Step {{ step.order }}
           </button>
-          <button @click="addStep" class="btn-default-md">Add a step</button>
+          <button @click="docStore.addStep(stepIndex)" class="btn-default-md">
+            Add a step
+          </button>
         </div>
       </div>
     </div>
@@ -282,28 +284,7 @@ const addInput = (): void => {
     label: "",
     name: "",
     value: "",
-    class: validInputStyle,
-  });
-};
-
-const addStep = () => {
-  const order = docStore.doc.steps.length + 1;
-  const id = generateRandomString();
-  docStore.doc.steps.push({
-    id: id,
-    order: order,
-    title: "",
-    tasks: [
-      {
-        id: id,
-        order: order,
-        language: {},
-        intro: "",
-        input: "",
-        output: "",
-        focus: null,
-      },
-    ],
+    class: docStore.validInputStyle,
   });
 };
 
