@@ -65,18 +65,16 @@ export const useDocStore = defineStore("DocStore", {
       return result;
     },
     addStep(stepIndex: number) {
-      console.log(stepIndex);
-
       const id = this.generateRandomString();
-      const newStep = {
-        id: id,
+      const newStep: Step = {
+        id,
         order: stepIndex + 1,
         title: "",
         tasks: [
           {
-            id: id,
+            id,
             order: 1,
-            language: {},
+            language: {} as Language,
             intro: "",
             input: "",
             output: "",
@@ -84,13 +82,14 @@ export const useDocStore = defineStore("DocStore", {
           },
         ],
       };
+
       // Insert the new step at the specified index
       this.doc.steps.splice(stepIndex + 1, 0, newStep);
 
       // Update the order of the existing steps
-      for (let i = stepIndex + 1; i < this.doc.steps.length; i++) {
-        this.doc.steps[i].order = i + 1;
-      }
+      this.doc.steps.forEach((step, i) => {
+        step.order = i + 1;
+      });
     },
     deleteStep(stepIndex: number) {
       // Remove the step at the specified index
@@ -108,12 +107,12 @@ export const useDocStore = defineStore("DocStore", {
       const newTask = {
         id,
         order: taskIndex + 1,
-        language: {},
+        language: {} as Language,
         intro: "",
         input: "",
         output: "",
         focus: null,
-      };
+      } as Task;
 
       const step = this.doc.steps[stepIndex];
 
